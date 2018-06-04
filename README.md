@@ -7,4 +7,6 @@ Just trying to commit something different... In this case, it is just a single l
 
 This is a remote commit that I'd like to add... please?
 
+These are emoji: :) :( ;)
+
 Added a last, perhaps conflicting line.
