@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <html>
+        <style>body { margin:0; overflow:hidden; }</style>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">        
+    </html>
+<body>
+    <canvas id="ccc" width=1200 height=800></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.110.0/examples/js/controls/TrackballControls.js"></script>
+    <script>
+        const CELLSIDE = 32;
+        const GRIDSIDE = 32;
+        const xFactor = 16;
+        let previous = null;
+        let grid = new Array(GRIDSIDE);
+        let lastTime = null;
+        let ctx = null;
+        let renderer = null;
+        let camera = null;
+        let controls = null;
+        let scene = null;
+        let texture = null;
+        let mesh = null;
+
+        initialize();
+        initializeGraphics();
+        window.onresize = handleResize;
+        requestAnimationFrame(render3d);
+
+        function initialize() {
+            for (let y = 0; y < GRIDSIDE; y++) {
+                grid[y] = new Array(GRIDSIDE*xFactor);
+                for (let x = 0; x < GRIDSIDE*xFactor; x++) {
+                    grid[y][x] = Math.random() <= 0.3 ? (Math.random() < 0.5 ? 1 : 2) : 0;
+                }
+            }
+        }
+
+        function initializeGraphics() {
+            ctx = document.createElement("canvas").getContext("2d");
+            ctx.canvas.width = GRIDSIDE*xFactor * CELLSIDE;
+            ctx.canvas.height = GRIDSIDE * CELLSIDE;
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.fillStyle = "gray";
+            for (let y = 0; y < GRIDSIDE; y++) {
+                for (let x = 0; x < GRIDSIDE*xFactor; x++) {
+                    ctx.strokeRect(x * CELLSIDE, y * CELLSIDE, CELLSIDE-1, CELLSIDE-1);
+                }
+            }
+
+            renderer = new THREE.WebGLRenderer({ canvas: ccc });
+            camera = new THREE.PerspectiveCamera(75, 2, 0.1, 5);
+            camera.position.z = 2.6;
+            camera.aspect = ccc.clientWidth / ccc.clientHeight;
+            camera.updateProjectionMatrix();
+            controls = new THREE.TrackballControls(camera, renderer.domElement);
+            controls.rotateSpeed = 1.0;
+            controls.zoomSpeed = 1.2;
+            controls.panSpeed = 0.8;
+            controls.keys = [ 65, 83, 68 ];
+            scene = new THREE.Scene();
+            const geometry = new THREE.TorusKnotGeometry( 1, 0.2, GRIDSIDE * xFactor, GRIDSIDE, 3, 5 );
+            texture = new THREE.CanvasTexture(ctx.canvas);
+
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            handleResize();
+        }
+
+        function resizeRendererToDisplaySize(renderer) {
+            const canvas = renderer.domElement;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const needResize = canvas.width !== width || canvas.height !== height;
+            if (needResize) {
+                renderer.setSize(width, height, false);
+            }
+            return needResize;
+        }
+
+        function wrap(n, N) { return (n + N) % N; }
+
+        function condVal(y, x, target)
+        {
+            return grid[wrap(y, GRIDSIDE)][wrap(x, GRIDSIDE*xFactor)] == target ? 1 : 0;
+        }
+
+        function condSum(y, x, target)
+        {
+            return condVal(y, x+1, target) +
+                   condVal(y, x-1, target) +
+                   condVal(y+1, x, target) +
+                   condVal(y-1, x, target) +
+                   condVal(y+1, x+1, target) +
+                   condVal(y+1, x-1, target) +
+                   condVal(y-1, x+1, target) +
+                   condVal(y-1, x-1, target);
+        }
+
+        function update() {
+            let newgrid = new Array(GRIDSIDE);
+
+            for (let y = 0; y < GRIDSIDE; y++) {
+                newgrid[y] = new Array(GRIDSIDE*xFactor);
+
+                for (let x = 0; x < GRIDSIDE*xFactor; x++) {
+                    let S1 = condSum(y,x,1);
+                    let S2 = condSum(y,x,2);
+                    let S = S1 + S2;
+
+                    if (Math.random()<0.0001) {
+                        newgrid[y][x]= Math.random() < 0.5 ? 1 : 2;
+                    } else if (S === 3 && grid[y][x] == 0) {
+                        newgrid[y][x] = S1 > S2 ? 1 : 2;
+                    } else if (grid[y][x] > 0 && (S === 2 || S === 3)) {
+                        newgrid[y][x] = S1 > S2 ? 1 : (S1 < S2 ? 2 : grid[y][x]);
+                    } else {
+                        newgrid[y][x]=0;
+                    }
+                }
+            }
+
+            previous = grid;
+            grid = newgrid;
+        }
+
+        function render() {
+            for (let y = 0; y < GRIDSIDE; y++) {
+                for (let x = 0; x < GRIDSIDE*xFactor; x++) {
+                    if (previous === null || previous[y][x] !== grid[y][x]) {
+                        if (grid[y][x] === 0)
+                        {
+                            ctx.fillStyle = "white";
+                            ctx.fillRect(x * CELLSIDE + 1, y * CELLSIDE + 1, CELLSIDE-2, CELLSIDE-2);
+                        }
+                        else {
+                            ctx.fillStyle = (grid[y][x] === 1 ? "blue" : "red");
+                            ctx.fillRect(x * CELLSIDE + 1, y * CELLSIDE + 1, CELLSIDE-2, CELLSIDE-2);
+                        }
+                    }
+                }
+            }
+        }
+
+        function render3d(time) {
+            if (resizeRendererToDisplaySize(renderer)) {
+                const canvas = renderer.domElement;
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+            }
+
+            if (!lastTime || (time - lastTime > 100)) {
+                update();
+                lastTime = time;
+            } 
+            render();
+            texture.needsUpdate = true;
+
+            const rot = (time * 0.001) * 0.2;
+            mesh.rotation.x = rot;
+            mesh.rotation.y = rot;
+
+            renderer.render(scene, camera);
+
+            requestAnimationFrame(render3d);
+            controls.update();
+        }
+
+        function handleResize() {
+            controls.handleResize();
+            ccc.width = window.innerWidth; 
+            ccc.height = window.innerHeight;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>
