@@ -118,7 +118,7 @@
         }
 
         async function run() {
-            code.innerHTML = `<span style='color:rgb(211, 211, 211)'>${escapeHack(log[0][1])}`;
+            code.innerHTML = `<span style='color:rgb(211, 211, 211)'>${escapeHack(log[0][1])}</span>`;
             iteration.innerText = 0;
             codelen.innerText = log[0][1].length;
             await sleep(2000);
@@ -130,14 +130,14 @@
                     iteration.innerText = v + 1;
                     codelen.innerText = x[0].length;
                     
-                    code.innerHTML = `<span style='color:rgb(0,211,211)'>${escapeHack(x[0].substring(0, x[1]))}<span style='color:lightgray'><span style='background-color:${x[2] ? "red" : "rgb(0,211,211)"}'>${escapeHack(x[0][x[1]])}</span>${escapeHack(x[0].substring(x[1]+1))}`;
+                    code.innerHTML = `<span style='color:rgb(0,211,211)'>${escapeHack(x[0].substring(0, x[1]))}</span><span style='color:lightgray'><span style='background-color:${x[2] ? "red" : "rgb(0,211,211)"}'>${escapeHack(x[0][x[1]])}</span>${escapeHack(x[0].substring(x[1]+1))}`;
 
                     await sleep(x[2]&&v>1?75:5);
                 }
 
                 for (let c = 0; c < 212; c += 2)
                 {
-                    code.innerHTML = `<span style='color:rgb(${c}, 211, 211)'>${escapeHack(log[v + 1][1])}`;
+                    code.innerHTML = `<span style='color:rgb(${c}, 211, 211)'>${escapeHack(log[v + 1][1])}</span>&nbsp;`;
                     await sleep(0);
                 }
 
