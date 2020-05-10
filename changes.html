@@ -56,9 +56,11 @@
             ["text?!?",       "<canvas id=G><svg onload=setInterval('for(h=[G.height=i=(N=75)*N];i--;(h[i]=g?S-5?S==6:g[i]:Date.now()&1)&&G.getContext`2d`.fillText(0,i%N*4,f(i/N)*4))for(z=S=9;z--;S-=g[f(i/N+z%3+74)%N*N+f(i+z/3+74)%N])f=parseInt;g=h',g=0)>"],
             ["~~",            "<canvas id=G><svg onload=setInterval('for(h=[G.height=i=(N=75)*N];i--;(h[i]=g?S-5?S==6:g[i]:Date.now()&1)&&G.getContext`2d`.fillText(0,i%N*4,~~(i/N)*4))for(z=S=9;z--;S-=g[~~(i/N+z%3+74)%N*N+~~(i+z/3+74)%N]);g=h',g=0)>"],
             ["2-complement",  "<canvas id=G><svg onload=setInterval('for(h=[G.height=i=(N=75)*N];i--;(h[i]=g?S-5?S==6:g[i]:Date.now()&1)&&G.getContext`2d`.fillText(0,i%N*4,~~(i/N)*4))for(z=S=9;z--;S-=g[~~(i/N+z%3+74)%N*N-~(i+z/3+73)%N]);g=h',g=0)>"],
+            ["j=i/N",         "<canvas id=G><svg onload=setInterval('for(h=[G.height=i=(N=75)*N];i--;(h[i]=g?S-5?S==6:g[i]:Date.now()&1)&&G.getContext`2d`.fillText(0,i%N*4,j*4))for(z=S=9;z--;S-=g[(j+z%3+74)%N*N-~(i+z/3+73)%N])j=XX(i/N);g=h',g=0)>"],
+            ["down",          "<canvas id=G><svg onload=setInterval('for(h=[G.height=i=(N=75)*N];i--;(h[i]=g?S-5?S==6:g[i]:Date.now()&1)&&G.getContext`2d`.fillText(0,i%N*4,j*4))for(z=S=9;z--;S-=g[(j+z%3)%N*N-~(i+z/3+73)%N])j=73-~(i/N);g=h',g=0)>"],
         ]
 
-        // Returns a list of tuples (pre,cur,pos,changed) where pre+cur+pos is the revised string, and changed tells
+        // Returns a list of tuples (str,pos,changed) where str is the revised string at position pos, and changed tells
         // if anything material changed from the last point (besides moving forward with no modifications).
         function* changes(s, t) {
             // D[i,j] = min distance between s[0..i) and t[0..j)
@@ -128,7 +130,11 @@
             codelen.innerText = log[0][1].length;
             await sleep(2000);
             for (let v = 0; v < log.length - 1; v++) {
-                if (v>0) demo.srcdoc = log[v][1].replace("g=0)>", "(g=0)+75)>").replace("<canvas id", "<body style='overflow:hidden'><canvas style='padding:0;display:block;margin-left:auto;margin-right:auto' id");
+                if (v>0) {
+                    src = log[v][1].replace("g=0)>", "(g=0)+75)>").replace("<canvas id", "<body style='overflow:hidden'><canvas style='padding:0;display:block;margin-left:auto;margin-right:auto' id");
+                    if (src.includes("j=73-~(i/N)")) src = src.replace("fillText(0,i%N*4,j*4)","fillText(0,i%N*4,j*4-72*4)");
+                    demo.srcdoc = src;                   
+                }
                 comment.innerText=log[v+1][0];
                 for (let x of [...changes(log[v][1], log[v + 1][1])].reverse())
                 {
