@@ -183,11 +183,13 @@
                         src = log[v][1]
                             .replace("g=0)>", "(g=0)+75)>") // normalize speed
                             .replace("<canvas id", "<body style='overflow:hidden'><canvas style='padding:0;display:block;margin-left:auto;margin-right:auto' id"); // center canvas
-                        if (src.includes("j=73-~(i/N") || src.includes("j=-N-i/N")) 
-                            ; // ???? demo.style.transform="translateY(-300px)";
-                        else if (src.includes("i=(G.width=N=75)*N")) 
-                            ; // ???? demo.style.transform="translateY(900px) scale(4)";
-                        // Show
+                        if (src.includes("j=73-~(i/N") || src.includes("j=-N-i/N")) {
+                            src = src.replace("<body style='", "<body style='transform:translateY(-300px);");
+                        }
+                        else if (src.includes("i=(G.width=N=75)*N")) {
+                            src = src.replace("<body style='", "<body style='transform:scale(4);");
+                        }
+
                         demo.srcdoc = src;
                     }
 
