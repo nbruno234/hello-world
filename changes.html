@@ -1,13 +1,12 @@
 <html>
 <head>
     <title>Life is short</title>
-    <style>
-
-    </style>
 </head>
 <body style="overflow: hidden;">
 
-    <div id="rules" style="display:none; position:absolute; top:10px; right: 10px; padding:10px; background-color: rgba(255, 255, 255, 0.95); border-style: solid; border-width: 1px; box-shadow: 4px 4px rgba(192, 192, 192, 0.7); z-index: 99;">
+    <div id="rules" 
+         style="display:none; position:absolute; top:10px; right: 10px; padding:10px; background-color: rgba(255, 255, 255, 0.95); border-style: solid; border-width: 1px; box-shadow: 4px 4px rgba(192, 192, 192, 0.7); z-index: 99;"
+         onclick="toggleRules()">
         <ul>
             <li>Must follow the game of life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules" target="_blank">rules</a> (B3/S23)</li>
             <li>The field must be at least 64x64 with a strict torus topology</li>
@@ -19,20 +18,21 @@
     <center>
         <h1 style="padding-bottom: 0; margin-bottom: 0;">Conway's Game of Life</h1>
         <h3 style="padding-top: 5px; margin-top: 0; font-family: 'Consolas', Courier, monospace;">
-            Iteration: <span id="iteration" style="min-width: 35px; text-align: right; display: inline-block"></span>, 
+            Iteration: <span id="iteration" style="min-width: 42px; text-align: right; display: inline-block"></span>, 
             Length: <span id="codelen" style="min-width: 40px; text-align: right; display: inline-block"></span>, 
-            <a href="javascript:toggleRules()">Rules</a>&nbsp;
+            <a href="javascript:toggleRules()">[?]</a>&nbsp;
+            <br />
             <a style="text-decoration: none;" href="javascript:change(-1000)">|&lt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(-1)">&lt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:pause()">||</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1)">&gt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1000)">&gt;|</a>
         </h3>
-        <span id="comment" style="margin-bottom: 0; color:red; position: absolute; top: 20; left: 10; transform: rotate(-10deg);"></span>
+        <span id="comment" style="margin-bottom: 0; color:red; position: absolute; top: 20; left: 10; transform: rotate(-10deg); font-size: x-large"></span>
     </center>
 
     <div id="code" style="border-style: solid; padding: 8px; font-family: 'Consolas', Courier, monospace;white-space: pre-wrap;word-break: break-all;background-color: black; color: lightgray;">some</div>
-    <br>
+    <br />
     <iframe style="border-style: none;" width="100%" height="100%" id="demo"></iframe>
 
     <script>
@@ -149,7 +149,7 @@
             return escapeElement.innerHTML;
         }
 
-        let v = 0; // 0
+        let v = 0;
         let changed = false;
         let paused = false;
 
@@ -164,8 +164,9 @@
         
         async function run() {
             // Fix odd escaping issue with closing script tags
-            for (let i in log) 
+            for (let i in log) {
                 log[i][1] = log[i][1].replace("/ script", "/script");
+            }
 
             code.innerHTML = `<span style='color:rgb(211, 211, 211)'>${escapeHack(log[0][1])}</span>`;
             iteration.innerText = 0;
@@ -209,14 +210,18 @@
                             break;
                         }
 
-                        while (paused) await sleep(100);
+                        while (paused) {
+                            await sleep(100);
+                        }
                     }
 
                     if (changed) {
                         continue;
                     }
 
-                    while (paused) await sleep(100);
+                    while (paused) {
+                        await sleep(100);
+                    }
 
                     for (let c = 0; c < 212; c += 2) {
                         code.innerHTML = `<span style='color:rgb(${c}, 211, 211)'>${escapeHack(log[v + 1][1])}</span>&nbsp;`;
