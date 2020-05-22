@@ -40,7 +40,7 @@
     </div>
 
     <div style="text-align: center;">
-        <h1 style="padding-bottom: 0; margin-bottom: 0;">Conway's Game of Life</h1>
+        <h1 style="padding-bottom: 0; margin-bottom: 0;">Conway's Game of Life <a href="javascript:toggleRules()">[?]</a></h1>
         <h3 style="padding-top: 5px; margin-top: 0; font-family: 'Consolas', Courier, monospace;">
             Iteration: <span id="iteration" style="min-width: 45px; text-align: right; display: inline-block"></span>, 
             Length: <span id="codelen" style="min-width: 45px; text-align: right; display: inline-block"></span>
@@ -50,7 +50,6 @@
             <a style="text-decoration: none;" href="javascript:pause()">||</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1)">&gt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1000)">&gt;|</a>
-            <a href="javascript:toggleRules()">[?]</a>&nbsp;
         </h3>
     </div>
 
@@ -60,7 +59,7 @@
         code
     </div>
 
-    <iframe style="border-style: none;" width="100%" height="500px" id="demo"></iframe>
+    <iframe style="border-style: none;" width="100%" height="800px" id="demo"></iframe>
 
     <script>
         const log = [   
@@ -76,7 +75,7 @@
             ["Variable for a digit? Nop",   "<canvas id=g width=800 height=800/><script>for(N=80,m=Math,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=m.random()<.1?85:0;setInterval('for(h=[],i=0;i<N*N;i++){for(z=S=0,y=m.floor(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+m.floor(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
             ["Reuse N again",               "<canvas id=g width=800 height=800/><script>for(N=80,m=Math,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=m.random()<.1?N:0;setInterval('for(h=[],i=0;i<N*N;i++){for(z=S=0,y=m.floor(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+m.floor(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
             ["f=Math.floor",                "<canvas id=g width=800 height=800/><script>for(N=80,f=Math.floor,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()<.1?N:0;setInterval('for(h=[],i=0;i<N*N;i++){for(z=S=0,y=f(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
-            ["floot -> parseInt",           "<canvas id=g width=800 height=800/><script>for(N=80,f=parseInt,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()<.1?N:0;setInterval('for(h=[],i=0;i<N*N;i++){for(z=S=0,y=f(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
+            ["floor -> parseInt",           "<canvas id=g width=800 height=800/><script>for(N=80,f=parseInt,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()<.1?N:0;setInterval('for(h=[],i=0;i<N*N;i++){for(z=S=0,y=f(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
             ["j==N*N anyway",               "<canvas id=g width=800 height=800/><script>for(N=80,f=parseInt,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()<.1?N:0;setInterval('for(h=[],i=0;i<j;i++){for(z=S=0,y=f(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
             ["The answer is 87",            "<canvas id=g width=800 height=800/><script>for(N=80,f=parseInt,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()*87;setInterval('for(h=[],i=0;i<j;i++){for(z=S=0,y=f(i/N);z<9;z++)S+=g[N*((N+y+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,y*9,9,9)}g=h',99)</ script>"],
             ["Tilt?",                       "<canvas id=g width=800 height=800/><script>for(N=80,f=parseInt,d=g.getContext`2d`,j=0;j<N*N;j++)g[j]=Math.random()*87;setInterval('for(h=[],i=0;i<j;i++){for(z=S=0;z<9;z++)S+=g[N*((N+f(i/N)+z%3-1)%N)+(i+f(z/3)-1)%N]>79;s=h[i]=S-3&&(S-4||g[i]-N)?g[i]-5:N;d.fillStyle=`rgb(0,${s-N?s:3*s},0)`;d.fillRect(i%N*9,i/N*9,9,9)}g=h',99)</ script>"],
