@@ -1,6 +1,30 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Life is short</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <style>
+        #comment {
+            position: absolute; 
+            top: 10px;
+            left: 10px;
+            margin-bottom: 0; 
+            color:red; 
+            transform: rotate(-10deg); 
+            font-size: x-large;
+        }
+
+        @media screen and (max-width: 512px) {
+            #comment {
+                font-style: italic;
+                position: relative;
+                top: unset;
+                left: unset;
+                transform: unset;
+                font-size: x-large;
+            }
+        }        
+    </style>
 </head>
 <body style="overflow: hidden;">
 
@@ -15,25 +39,28 @@
         </ul>
     </div>
 
-    <center>
+    <div style="text-align: center;">
         <h1 style="padding-bottom: 0; margin-bottom: 0;">Conway's Game of Life</h1>
         <h3 style="padding-top: 5px; margin-top: 0; font-family: 'Consolas', Courier, monospace;">
-            Iteration: <span id="iteration" style="min-width: 42px; text-align: right; display: inline-block"></span>, 
-            Length: <span id="codelen" style="min-width: 40px; text-align: right; display: inline-block"></span>, 
-            <a href="javascript:toggleRules()">[?]</a>&nbsp;
+            Iteration: <span id="iteration" style="min-width: 45px; text-align: right; display: inline-block"></span>, 
+            Length: <span id="codelen" style="min-width: 45px; text-align: right; display: inline-block"></span>
             <br />
             <a style="text-decoration: none;" href="javascript:change(-1000)">|&lt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(-1)">&lt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:pause()">||</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1)">&gt;</a>&nbsp;
             <a style="text-decoration: none;" href="javascript:change(1000)">&gt;|</a>
+            <a href="javascript:toggleRules()">[?]</a>&nbsp;
         </h3>
-        <span id="comment" style="margin-bottom: 0; color:red; position: absolute; top: 20; left: 10; transform: rotate(-10deg); font-size: x-large"></span>
-    </center>
+    </div>
 
-    <div id="code" style="border-style: solid; padding: 8px; font-family: 'Consolas', Courier, monospace;white-space: pre-wrap;word-break: break-all;background-color: black; color: lightgray;">some</div>
-    <br />
-    <iframe style="border-style: none;" width="100%" height="100%" id="demo"></iframe>
+    <div id="comment"></div>
+
+    <div id="code" style="border-style: solid; padding: 8px; margin-bottom: 10px; font-family: 'Consolas', Courier, monospace;white-space: pre-wrap;word-break: break-all;background-color: black; color: lightgray;">
+        code
+    </div>
+
+    <iframe style="border-style: none;" width="100%" height="500px" id="demo"></iframe>
 
     <script>
         const log = [   
