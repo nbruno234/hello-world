@@ -222,6 +222,17 @@
                             src = src.replace("<body style='", "<body style='transform:scale(4);");
                         }
 
+                        src += `<script>
+                            let c = document.getElementsByTagName("canvas")[0];
+                            let bw = document.body.offsetWidth, cw = c.width, r = bw / cw;
+                            if (r < 1) {
+                                let x = Math.floor((bw - cw) / 2);
+                                let y = 2 * x - (c.height == 800 ? 50 : -50);
+                                document.body.style.transform = "scale(" + r + ")";
+                                document.body.style.transform += "translate(" + x + "px," + y + "px)";
+                            }
+                            </ script>`.replace("/ script", "/script");
+
                         demo.srcdoc = src;
                     }
 
