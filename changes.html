@@ -257,24 +257,37 @@
                     for (i = 0; i < changes.length; ++i) {
 
                         let html = "", len = 0;
+                        chunks = [];
                         for (j = 0; j < changes.length; ++j) {
                             let ins = changes[j][1] % 3 === 1;
                             let del = changes[j][1] % 3 === 2;
                             if ((j > i && ins) || (j < i && del)) continue;
 
-                            backColor = i == changes.length - 1 ? "black" : i == j ? "yellow" : ins ? "rgb(35,35,35)" : del ? "rgb(128,29,29)" : "black";
-                            foreColor = ins ? "rgb(26,238,58)" : del ? "rgb(235,150,150" : i <= j ? "rgb(211,211,211)" : "rgb(211,211,211)";
+                            bc = i == changes.length - 1 ? "black" : i == j ? "yellow" : ins ? "rgb(35,35,35)" : del ? "rgb(128,29,29)" : "black";
+                            fc = ins ? "rgb(26,238,58)" : del ? "rgb(235,150,150" : i <= j ? "rgb(211,211,211)" : "rgb(211,211,211)";
+                            val = changes[j][0];
 
                             // different palette
-                            //backColor = i === j ? "yellow" : ins ? "black" : del ? "black" : "black";
-                            //foreColor = i === j ? "black" : ins ? "green" : del ? "red" : "white";
+                            //bc = i === j ? "yellow" : ins ? "black" : del ? "black" : "black";
+                            //fc = i === j ? "black" : ins ? "green" : del ? "red" : "white";
 
-                            html += `<span style='background-color:${backColor}; color: ${foreColor};'>${changes[j][0]}</span>`;
-                            len++;
-
-                            if (changed || paused) {
-                                break;
+                            if (chunks.length == 0 || chunks[chunks.length-1][1] != fc || chunks[chunks.length-1][2] != bc)
+                            {
+                                chunks.push([val,fc,bc]);
                             }
+                            else
+                            {
+                                chunks[chunks.length-1][0]+=val;
+                            }
+
+                            //html += `<span style='background-color:${bc}; color: ${fc};'>${val}</span>`;
+                            len++;
+                        }
+
+                        for (chunk of chunks)
+                        {
+                            html += `<span style='background-color:${chunk[2]}; color: ${chunk[1]};'>${escapeHack(chunk[0])}</span>`;
+                            //len += chunk[0];
                         }
 
                         if (changed) {
